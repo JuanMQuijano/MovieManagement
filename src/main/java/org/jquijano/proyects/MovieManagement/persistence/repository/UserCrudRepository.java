@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import java.util.List;
 import java.util.Optional;
 
-public interface UserCrudRepositoru extends JpaRepository<User, Long> {
+public interface UserCrudRepository extends JpaRepository<User, Long> {
 
     List<User> findByNameContaining(String name);
 
@@ -15,5 +15,5 @@ public interface UserCrudRepositoru extends JpaRepository<User, Long> {
 
     //Indica a JPA que la consulta puede tener efectos secundarios en el estado persistence de la base de datos
     @Modifying
-    void deleteByUsername(String username);
+    int deleteByUsername(String username);
 }

@@ -6,9 +6,11 @@ import org.jquijano.proyects.MovieManagement.persistence.repository.MovieCrudRep
 import org.jquijano.proyects.MovieManagement.persistence.service.MovieService;
 import org.jquijano.proyects.MovieManagement.util.MovieGenre;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class MovieServiceImpl implements MovieService {
 
     @Autowired
