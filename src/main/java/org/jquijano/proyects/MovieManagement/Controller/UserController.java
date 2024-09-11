@@ -1,0 +1,36 @@
+package org.jquijano.proyects.MovieManagement.Controller;
+
+import org.jquijano.proyects.MovieManagement.persistence.entity.User;
+import org.jquijano.proyects.MovieManagement.persistence.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/users")
+public class UserController {
+
+    @Autowired
+    private UserService userService;
+
+    @RequestMapping(method = RequestMethod.GET)
+    public List<User> findAll(@RequestParam(required = false) String name) {
+
+        List<User> users = null;
+
+        if (StringUtils.hasText(name)) {
+            users = userService.findAllByName(name);
+        } else {
+            users = userService.findAll();
+        }
+
+        return users;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/{username}")
+    public User findOneByUsername(@PathVariable String username) {
+        return userService.findOneByUsername(username);
+    }
+}

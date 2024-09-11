@@ -18,6 +18,7 @@ public class Movie {
     @Column(nullable = false)
     private String director;
 
+    @Enumerated(value = EnumType.STRING)
     private MovieGenre genre;
 
     private int releaseYear;
