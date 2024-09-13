@@ -57,4 +57,25 @@ public class MovieController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @RequestMapping(method = RequestMethod.POST)
+    public ResponseEntity<Movie> createOne(@RequestParam String title,
+                                           @RequestParam String director,
+                                           @RequestParam MovieGenre genre,
+                                           @RequestParam int releaseYear,
+                                           HttpServletRequest httpServletRequest) {
+        Movie movie = new Movie();
+        movie.setTitle(title);
+        movie.setDirector(director);
+        movie.setGenre(genre);
+        movie.setReleaseYear(releaseYear);
+
+        Movie movieCreated = movieService.createOne(movie);
+
+        String baseUrl = httpServletRequest.getRequestURL().toString();
+        URI newLocation = URI.create(baseUrl + movieCreated.getId());
+        return ResponseEntity
+                .created(newLocation)
+                .body(movieCreated);
+    }
 }
