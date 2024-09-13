@@ -59,21 +59,13 @@ public class MovieController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<Movie> createOne(@RequestParam String title,
-                                           @RequestParam String director,
-                                           @RequestParam MovieGenre genre,
-                                           @RequestParam int releaseYear,
+    public ResponseEntity<Movie> createOne(@RequestBody Movie newMovie,
                                            HttpServletRequest httpServletRequest) {
-        Movie movie = new Movie();
-        movie.setTitle(title);
-        movie.setDirector(director);
-        movie.setGenre(genre);
-        movie.setReleaseYear(releaseYear);
 
-        Movie movieCreated = movieService.createOne(movie);
+        Movie movieCreated = movieService.createOne(newMovie);
 
         String baseUrl = httpServletRequest.getRequestURL().toString();
-        URI newLocation = URI.create(baseUrl + movieCreated.getId());
+        URI newLocation = URI.create(baseUrl + "/" + movieCreated.getId());
         return ResponseEntity
                 .created(newLocation)
                 .body(movieCreated);
