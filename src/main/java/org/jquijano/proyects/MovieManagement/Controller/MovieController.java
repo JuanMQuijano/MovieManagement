@@ -70,4 +70,16 @@ public class MovieController {
                 .created(newLocation)
                 .body(movieCreated);
     }
+
+    @RequestMapping(method = RequestMethod.PUT, value = "/{id}")
+    public ResponseEntity<Movie> updateOneById(@PathVariable Long id,
+                                               @RequestBody Movie newMovie) {
+        try {
+            Movie movieUpdated = movieService.updateOneById(id, newMovie);
+
+            return ResponseEntity.ok(movieUpdated);
+        } catch (ObjectNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }

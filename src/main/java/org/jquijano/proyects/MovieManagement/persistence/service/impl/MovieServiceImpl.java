@@ -44,6 +44,7 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public Movie updateOneById(Long id, Movie newMovie) {
         Movie oldMovie = this.findOneById(id);
+
         oldMovie.setGenre(newMovie.getGenre());
         oldMovie.setReleaseYear(newMovie.getReleaseYear());
         oldMovie.setTitle(newMovie.getTitle());
