@@ -1,31 +1,42 @@
 package org.jquijano.proyects.MovieManagement.persistence.service.impl;
 
 import org.jquijano.proyects.MovieManagement.exception.ObjectNotFoundException;
+import org.jquijano.proyects.MovieManagement.persistence.entity.Movie;
 import org.jquijano.proyects.MovieManagement.persistence.entity.User;
+import org.jquijano.proyects.MovieManagement.persistence.repository.MovieCrudRepository;
 import org.jquijano.proyects.MovieManagement.persistence.repository.UserCrudRepository;
 import org.jquijano.proyects.MovieManagement.persistence.service.UserService;
+import org.jquijano.proyects.MovieManagement.util.MovieGenre;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@Transactional
 public class UserServiceImpl implements UserService {
+
+    @Autowired
+    private MovieCrudRepository movieCrudRepository;
 
     @Autowired
     private UserCrudRepository userCrudRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public List<User> findAll() {
         return userCrudRepository.findAll();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<User> findAllByName(String name) {
         return userCrudRepository.findByNameContaining(name);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public User findOneByUsername(String username) {
         return userCrudRepository.findByUsername(username)
                 .orElseThrow(() -> new ObjectNotFoundException("[user: " + username + "]"));
@@ -52,5 +63,18 @@ public class UserServiceImpl implements UserService {
             throw new ObjectNotFoundException("[user: " + username + "]");
 
         }
+    }
+
+    @Override
+    public void deleteAll() {
+        Movie movie = new Movie();
+
+        movie.setGenre(MovieGenre.ACTION);
+        movie.setDirector("Sam Raimi");
+        movie.setTitle("Spider Man");
+        movie.setReleaseYear(2002);
+        userCrudRepository.deleteAll();
+
+        movieCrudRepository.save(movie);
     }
 }

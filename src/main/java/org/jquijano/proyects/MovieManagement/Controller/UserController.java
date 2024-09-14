@@ -72,4 +72,11 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
     }
+
+
+    @DeleteMapping
+    public ResponseEntity<Void> deleteAll(){
+        userService.deleteAll();
+        return ResponseEntity.noContent().build();
+    }
 }

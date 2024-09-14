@@ -7,31 +7,37 @@ import org.jquijano.proyects.MovieManagement.persistence.service.MovieService;
 import org.jquijano.proyects.MovieManagement.util.MovieGenre;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@Transactional
 public class MovieServiceImpl implements MovieService {
 
     @Autowired
     private MovieCrudRepository movieCrudRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public List<Movie> findAll() {
         return movieCrudRepository.findAll();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Movie> findAllByTitle(String title) {
         return movieCrudRepository.findByTitleContaining(title);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Movie> findAllByGenre(MovieGenre genre) {
         return movieCrudRepository.findByGenre(genre);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Movie> findAllByGenreAndTitle(MovieGenre genre, String title) {
         return movieCrudRepository.findByGenreAndTitleContaining(genre, title);
     }
@@ -61,6 +67,7 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Movie findOneById(Long id) {
         return movieCrudRepository
                 .findById(id)

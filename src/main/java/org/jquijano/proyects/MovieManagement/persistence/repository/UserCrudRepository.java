@@ -1,9 +1,9 @@
 package org.jquijano.proyects.MovieManagement.persistence.repository;
 
-import jakarta.transaction.Transactional;
 import org.jquijano.proyects.MovieManagement.persistence.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
