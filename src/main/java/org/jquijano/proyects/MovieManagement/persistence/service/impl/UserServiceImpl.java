@@ -64,17 +64,4 @@ public class UserServiceImpl implements UserService {
 
         }
     }
-
-    @Override
-    public void deleteAll() {
-        Movie movie = new Movie();
-
-        movie.setGenre(MovieGenre.ACTION);
-        movie.setDirector("Sam Raimi");
-        movie.setTitle("Spider Man");
-        movie.setReleaseYear(2002);
-        userCrudRepository.deleteAll();
-
-        movieCrudRepository.save(movie);
-    }
 }

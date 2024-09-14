@@ -6,31 +6,37 @@ import org.jquijano.proyects.MovieManagement.persistence.repository.RatingCrudRe
 import org.jquijano.proyects.MovieManagement.persistence.service.RatingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@Transactional
 public class RatingServiceImpl implements RatingService {
 
     @Autowired
     private RatingCrudRepository ratingCrudRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public List<Rating> findAll() {
         return ratingCrudRepository.findAll();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Rating> findAllByMovieId(Long id) {
         return ratingCrudRepository.findByMovieId(id);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Rating> findAllByUsername(String username) {
         return ratingCrudRepository.findByUsername(username);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Rating findOneById(Long id) {
         return ratingCrudRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException("[rating:" + Long.toString(id) + "]"));
