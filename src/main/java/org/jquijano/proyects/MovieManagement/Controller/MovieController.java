@@ -6,10 +6,7 @@ import org.jquijano.proyects.MovieManagement.persistence.entity.Movie;
 import org.jquijano.proyects.MovieManagement.persistence.service.MovieService;
 import org.jquijano.proyects.MovieManagement.util.MovieGenre;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,7 +20,7 @@ public class MovieController {
     @Autowired
     private MovieService movieService;
 
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping
     public ResponseEntity<List<Movie>> findAll(@RequestParam(required = false) String title, @RequestParam(required = false) MovieGenre genre) {
 
         List<Movie> movies = null;
@@ -49,7 +46,7 @@ public class MovieController {
         return ResponseEntity.ok(movies);
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/{id}")
+    @GetMapping(value = "/{id}")
     public ResponseEntity<Movie> findOneById(@PathVariable Long id) {
         try {
             return ResponseEntity.ok(movieService.findOneById(id));
@@ -58,7 +55,7 @@ public class MovieController {
         }
     }
 
-    @RequestMapping(method = RequestMethod.POST)
+    @PostMapping
     public ResponseEntity<Movie> createOne(@RequestBody Movie newMovie,
                                            HttpServletRequest httpServletRequest) {
 
@@ -71,7 +68,7 @@ public class MovieController {
                 .body(movieCreated);
     }
 
-    @RequestMapping(method = RequestMethod.PUT, value = "/{id}")
+    @PutMapping(value = "/{id}")
     public ResponseEntity<Movie> updateOneById(@PathVariable Long id,
                                                @RequestBody Movie newMovie) {
         try {
@@ -79,6 +76,16 @@ public class MovieController {
 
             return ResponseEntity.ok(movieUpdated);
         } catch (ObjectNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> deleteOneById(@PathVariable Long id) {
+        try {
+            movieService.deleteOneById(id);
+            return ResponseEntity.noContent().build();
+        } catch (ObjectNotFoundException ex) {
             return ResponseEntity.notFound().build();
         }
     }

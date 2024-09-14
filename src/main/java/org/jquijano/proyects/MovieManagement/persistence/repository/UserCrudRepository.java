@@ -1,5 +1,6 @@
 package org.jquijano.proyects.MovieManagement.persistence.repository;
 
+import jakarta.transaction.Transactional;
 import org.jquijano.proyects.MovieManagement.persistence.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -15,5 +16,6 @@ public interface UserCrudRepository extends JpaRepository<User, Long> {
 
     //Indica a JPA que la consulta puede tener efectos secundarios en el estado persistence de la base de datos
     @Modifying
+    @Transactional
     int deleteByUsername(String username);
 }

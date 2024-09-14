@@ -1,7 +1,6 @@
 package org.jquijano.proyects.MovieManagement.persistence.repository;
 
 import org.jquijano.proyects.MovieManagement.persistence.entity.Movie;
-import org.jquijano.proyects.MovieManagement.persistence.entity.Rating;
 import org.jquijano.proyects.MovieManagement.util.MovieGenre;
 import org.springframework.data.jpa.repository.JpaRepository;
 
