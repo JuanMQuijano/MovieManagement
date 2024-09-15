@@ -1,20 +1,22 @@
 package org.jquijano.proyects.MovieManagement.persistence.service;
 
+import org.jquijano.proyects.MovieManagement.dto.request.SaveUser;
+import org.jquijano.proyects.MovieManagement.dto.response.GetUser;
 import org.jquijano.proyects.MovieManagement.persistence.entity.User;
 
 import java.util.List;
 
 public interface UserService {
 
-    List<User> findAll();
+    List<GetUser> findAll();
 
-    List<User> findAllByName(String name);
+    List<GetUser> findAllByName(String name);
 
-    User findOneByUsername(String username);
+    GetUser findOneByUsername(String username);
 
-    User createOne(User user);
+    GetUser createOne(SaveUser saveUser);
 
-    User updateOneByUsername(String username, User user);
+    GetUser updateOneByUsername(String username, SaveUser saveUser);
 
     void deleteOneByUsername(String username);
 

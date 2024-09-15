@@ -1,6 +1,8 @@
-package org.jquijano.proyects.MovieManagement.Controller;
+package org.jquijano.proyects.MovieManagement.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.jquijano.proyects.MovieManagement.dto.request.SaveMovie;
+import org.jquijano.proyects.MovieManagement.dto.response.GetMovie;
 import org.jquijano.proyects.MovieManagement.exception.ObjectNotFoundException;
 import org.jquijano.proyects.MovieManagement.persistence.entity.Movie;
 import org.jquijano.proyects.MovieManagement.persistence.service.MovieService;
@@ -21,9 +23,9 @@ public class MovieController {
     private MovieService movieService;
 
     @GetMapping
-    public ResponseEntity<List<Movie>> findAll(@RequestParam(required = false) String title, @RequestParam(required = false) MovieGenre genre) {
+    public ResponseEntity<List<GetMovie>> findAll(@RequestParam(required = false) String title, @RequestParam(required = false) MovieGenre genre) {
 
-        List<Movie> movies = null;
+        List<GetMovie> movies = null;
 
         if (StringUtils.hasText(title) && genre != null) {
             movies = movieService.findAllByGenreAndTitle(genre, title);
@@ -47,7 +49,7 @@ public class MovieController {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<Movie> findOneById(@PathVariable Long id) {
+    public ResponseEntity<GetMovie> findOneById(@PathVariable Long id) {
         try {
             return ResponseEntity.ok(movieService.findOneById(id));
         } catch (ObjectNotFoundException e) {
@@ -56,23 +58,23 @@ public class MovieController {
     }
 
     @PostMapping
-    public ResponseEntity<Movie> createOne(@RequestBody Movie newMovie,
-                                           HttpServletRequest httpServletRequest) {
+    public ResponseEntity<GetMovie> createOne(@RequestBody SaveMovie saveDto,
+                                              HttpServletRequest httpServletRequest) {
 
-        Movie movieCreated = movieService.createOne(newMovie);
+        GetMovie movieCreated = movieService.createOne(saveDto);
 
         String baseUrl = httpServletRequest.getRequestURL().toString();
-        URI newLocation = URI.create(baseUrl + "/" + movieCreated.getId());
+        URI newLocation = URI.create(baseUrl + "/" + movieCreated.id());
         return ResponseEntity
                 .created(newLocation)
                 .body(movieCreated);
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<Movie> updateOneById(@PathVariable Long id,
-                                               @RequestBody Movie newMovie) {
+    public ResponseEntity<GetMovie> updateOneById(@PathVariable Long id,
+                                                  @RequestBody SaveMovie saveDto) {
         try {
-            Movie movieUpdated = movieService.updateOneById(id, newMovie);
+            GetMovie movieUpdated = movieService.updateOneById(id, saveDto);
 
             return ResponseEntity.ok(movieUpdated);
         } catch (ObjectNotFoundException e) {

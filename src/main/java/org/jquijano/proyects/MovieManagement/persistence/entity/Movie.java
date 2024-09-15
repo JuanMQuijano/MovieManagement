@@ -1,8 +1,12 @@
 package org.jquijano.proyects.MovieManagement.persistence.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
 import org.jquijano.proyects.MovieManagement.util.MovieGenre;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -25,6 +29,11 @@ public class Movie {
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "movie")
     private List<Rating> ratings;
+
+    @CreationTimestamp
+    @Column(updatable = false, columnDefinition = "TIMESTAMP DEFAULT NOW()")
+    private LocalDateTime createdAt;
+
 
     public Long getId() {
         return id;
@@ -72,5 +81,13 @@ public class Movie {
 
     public void setRatings(List<Rating> ratings) {
         this.ratings = ratings;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 }

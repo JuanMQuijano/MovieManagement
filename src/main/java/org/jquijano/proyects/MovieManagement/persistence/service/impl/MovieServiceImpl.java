@@ -1,6 +1,9 @@
 package org.jquijano.proyects.MovieManagement.persistence.service.impl;
 
+import org.jquijano.proyects.MovieManagement.dto.request.SaveMovie;
+import org.jquijano.proyects.MovieManagement.dto.response.GetMovie;
 import org.jquijano.proyects.MovieManagement.exception.ObjectNotFoundException;
+import org.jquijano.proyects.MovieManagement.mapper.MovieMapper;
 import org.jquijano.proyects.MovieManagement.persistence.entity.Movie;
 import org.jquijano.proyects.MovieManagement.persistence.repository.MovieCrudRepository;
 import org.jquijano.proyects.MovieManagement.persistence.service.MovieService;
@@ -20,57 +23,69 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Movie> findAll() {
-        return movieCrudRepository.findAll();
+    public List<GetMovie> findAll() {
+//        return movieCrudRepository.findAll();
+        List<Movie> entites = movieCrudRepository.findAll();
+        return MovieMapper.toGetDtoList(entites);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Movie> findAllByTitle(String title) {
-        return movieCrudRepository.findByTitleContaining(title);
+    public List<GetMovie> findAllByTitle(String title) {
+        List<Movie> entities = movieCrudRepository.findByTitleContaining(title);
+        return MovieMapper.toGetDtoList(entities);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Movie> findAllByGenre(MovieGenre genre) {
-        return movieCrudRepository.findByGenre(genre);
+    public List<GetMovie> findAllByGenre(MovieGenre genre) {
+        List<Movie> entities = movieCrudRepository.findByGenre(genre);
+        return MovieMapper.toGetDtoList(entities);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Movie> findAllByGenreAndTitle(MovieGenre genre, String title) {
-        return movieCrudRepository.findByGenreAndTitleContaining(genre, title);
+    public List<GetMovie> findAllByGenreAndTitle(MovieGenre genre, String title) {
+        List<Movie> entities = movieCrudRepository.findByGenreAndTitleContaining(genre, title);
+        return MovieMapper.toGetDtoList(entities);
     }
 
     @Override
-    public Movie createOne(Movie movie) {
-        return movieCrudRepository.save(movie);
+    @Transactional(readOnly = true)
+    public GetMovie findOneById(Long id) {
+        return MovieMapper.toGetDto(
+                this.findOneEntityById(id)
+        );
+    }
+
+    @Transactional(readOnly = true)
+    private Movie findOneEntityById(Long id) {
+        return movieCrudRepository.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException("[movie:" + Long.toString(id) + "]"));
     }
 
     @Override
-    public Movie updateOneById(Long id, Movie newMovie) {
-        Movie oldMovie = this.findOneById(id);
+    public GetMovie createOne(SaveMovie saveDto) {
+        Movie newMovie = MovieMapper.toEntity(saveDto);
 
-        oldMovie.setGenre(newMovie.getGenre());
-        oldMovie.setReleaseYear(newMovie.getReleaseYear());
-        oldMovie.setTitle(newMovie.getTitle());
-        oldMovie.setDirector(newMovie.getDirector());
+        return MovieMapper.toGetDto(movieCrudRepository.save(newMovie));
+    }
 
-        return movieCrudRepository.save(oldMovie);
+    @Override
+    public GetMovie updateOneById(Long id, SaveMovie saveDto) {
+        Movie oldMovie = this.findOneEntityById(id);
+
+        MovieMapper.updateEntity(oldMovie, saveDto);
+
+        return MovieMapper.toGetDto(movieCrudRepository.save(oldMovie));
     }
 
     @Override
     public void deleteOneById(Long id) {
-        Movie movie = this.findOneById(id);
+        Movie movie = this.findOneEntityById(id);
 
         movieCrudRepository.delete(movie);
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public Movie findOneById(Long id) {
-        return movieCrudRepository
-                .findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException("[movie:" + Long.toString(id) + "]"));
-    }
+
 }
