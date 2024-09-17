@@ -1,6 +1,7 @@
 package org.jquijano.proyects.MovieManagement.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.jquijano.proyects.MovieManagement.dto.request.SaveMovie;
 import org.jquijano.proyects.MovieManagement.dto.response.GetMovie;
 import org.jquijano.proyects.MovieManagement.exception.ObjectNotFoundException;
@@ -58,7 +59,7 @@ public class MovieController {
     }
 
     @PostMapping
-    public ResponseEntity<GetMovie> createOne(@RequestBody SaveMovie saveDto,
+    public ResponseEntity<GetMovie> createOne(@Valid @RequestBody SaveMovie saveDto,
                                               HttpServletRequest httpServletRequest) {
 
         GetMovie movieCreated = movieService.createOne(saveDto);
@@ -72,7 +73,7 @@ public class MovieController {
 
     @PutMapping(value = "/{id}")
     public ResponseEntity<GetMovie> updateOneById(@PathVariable Long id,
-                                                  @RequestBody SaveMovie saveDto) {
+                                                  @Valid @RequestBody SaveMovie saveDto) {
         try {
             GetMovie movieUpdated = movieService.updateOneById(id, saveDto);
 

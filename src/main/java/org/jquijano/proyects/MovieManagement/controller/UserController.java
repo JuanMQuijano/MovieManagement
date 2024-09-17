@@ -1,6 +1,7 @@
 package org.jquijano.proyects.MovieManagement.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.jquijano.proyects.MovieManagement.dto.request.SaveUser;
 import org.jquijano.proyects.MovieManagement.dto.response.GetUser;
 import org.jquijano.proyects.MovieManagement.exception.ObjectNotFoundException;
@@ -46,7 +47,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<GetUser> createOne(@RequestBody SaveUser saveDto, HttpServletRequest request) {
+    public ResponseEntity<GetUser> createOne(@Valid @RequestBody SaveUser saveDto, HttpServletRequest request) {
         GetUser newUser = userService.createOne(saveDto);
 
         String baseUrl = request.getRequestURL().toString();
@@ -57,7 +58,7 @@ public class UserController {
     }
 
     @PutMapping(value = "/{username}")
-    public ResponseEntity<GetUser> updateOneByUsername(@PathVariable String username, @RequestBody SaveUser saveDto) {
+    public ResponseEntity<GetUser> updateOneByUsername(@PathVariable String username, @Valid @RequestBody SaveUser saveDto) {
         try {
             return ResponseEntity.ok(userService.updateOneByUsername(username, saveDto));
         } catch (ObjectNotFoundException ex) {
