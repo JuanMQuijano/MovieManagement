@@ -2,7 +2,7 @@ package org.jquijano.proyects.MovieManagement.exception;
 
 public class ObjectNotFoundException extends RuntimeException {
 
-    private final String objectNotFoundName;
+    private final String objectNotFoundName ;
     private final Throwable cause;
 
     public ObjectNotFoundException(String objectNotFoundName) {

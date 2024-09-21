@@ -12,8 +12,11 @@ import org.jquijano.proyects.MovieManagement.persistence.service.UserService;
 import org.jquijano.proyects.MovieManagement.persistence.service.validator.PasswordValidator;
 import org.jquijano.proyects.MovieManagement.util.MovieGenre;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.server.ServerErrorException;
 
 import java.util.List;
 
@@ -39,16 +42,17 @@ public class UserServiceImpl implements UserService {
         return UserMapper.toGetDtoList(userCrudRepository.findByNameContaining(name));
     }
 
+    @Transactional(readOnly = true)
+    private User findOneEntityByUsername(String username) {
+        return userCrudRepository.findByUsername(username)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatusCode.valueOf(404), "User not found: " + username));
+//                .orElseThrow(() -> new ObjectNotFoundException("[user: " + username + "]"));
+    }
+
     @Override
     @Transactional(readOnly = true)
     public GetUser findOneByUsername(String username) {
         return UserMapper.toGetDto(this.findOneEntityByUsername(username));
-    }
-
-    @Transactional(readOnly = true)
-    private User findOneEntityByUsername(String username) {
-        return userCrudRepository.findByUsername(username)
-                .orElseThrow(() -> new ObjectNotFoundException("[user: " + username + "]"));
     }
 
     @Override

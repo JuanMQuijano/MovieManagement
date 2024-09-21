@@ -9,8 +9,10 @@ import org.jquijano.proyects.MovieManagement.persistence.repository.MovieCrudRep
 import org.jquijano.proyects.MovieManagement.persistence.service.MovieService;
 import org.jquijano.proyects.MovieManagement.util.MovieGenre;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -61,7 +63,8 @@ public class MovieServiceImpl implements MovieService {
     @Transactional(readOnly = true)
     private Movie findOneEntityById(Long id) {
         return movieCrudRepository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException("[movie:" + Long.toString(id) + "]"));
+                //.orElseThrow(() -> new ObjectNotFoundException("[movie:" + Long.toString(id) + "]"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatusCode.valueOf(404), "Product not found: " + id));
     }
 
     @Override
