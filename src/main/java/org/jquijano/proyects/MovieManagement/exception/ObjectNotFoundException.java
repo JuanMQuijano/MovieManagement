@@ -1,8 +1,12 @@
 package org.jquijano.proyects.MovieManagement.exception;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+@ResponseStatus(HttpStatus.NOT_FOUND)
 public class ObjectNotFoundException extends RuntimeException {
 
-    private final String objectNotFoundName ;
+    private final String objectNotFoundName;
     private final Throwable cause;
 
     public ObjectNotFoundException(String objectNotFoundName) {
@@ -20,7 +24,7 @@ public class ObjectNotFoundException extends RuntimeException {
 
         String message = super.getMessage();
 
-        if(message == null){
+        if (message == null) {
             message = "";
         }
 
