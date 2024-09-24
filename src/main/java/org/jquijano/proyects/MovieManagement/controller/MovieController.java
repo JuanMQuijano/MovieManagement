@@ -2,15 +2,13 @@ package org.jquijano.proyects.MovieManagement.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import org.jquijano.proyects.MovieManagement.dto.response.MovieSearchCriteria;
 import org.jquijano.proyects.MovieManagement.dto.request.SaveMovie;
 import org.jquijano.proyects.MovieManagement.dto.response.GetMovie;
-import org.jquijano.proyects.MovieManagement.exception.ObjectNotFoundException;
-import org.jquijano.proyects.MovieManagement.persistence.entity.Movie;
 import org.jquijano.proyects.MovieManagement.persistence.service.MovieService;
 import org.jquijano.proyects.MovieManagement.util.MovieGenre;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -24,19 +22,24 @@ public class MovieController {
     private MovieService movieService;
 
     @GetMapping
-    public ResponseEntity<List<GetMovie>> findAll(@RequestParam(required = false) String title, @RequestParam(required = false) MovieGenre genre) {
+    public ResponseEntity<List<GetMovie>> findAll(@RequestParam(required = false) String title,
+                                                  @RequestParam(required = false) MovieGenre genre,
+                                                  @RequestParam(required = false, name = "min_release_year") Integer minReleaseYear,
+                                                  @RequestParam(required = false, name = "max_release_year") Integer maxReleaseYear,
+                                                  @RequestParam(required = false, name = "min_average_rating") Integer minAverageRating) {
 
-        List<GetMovie> movies = null;
+        MovieSearchCriteria movieSearchCriteria = new MovieSearchCriteria(title, genre, minReleaseYear, maxReleaseYear, minAverageRating);
+        List<GetMovie> movies = movieService.findAll(movieSearchCriteria);
 
-        if (StringUtils.hasText(title) && genre != null) {
-            movies = movieService.findAllByGenreAndTitle(genre, title);
-        } else if (StringUtils.hasText(title)) {
-            movies = movieService.findAllByTitle(title);
-        } else if (genre != null) {
-            movies = movieService.findAllByGenre(genre);
-        } else {
-            movies = movieService.findAll();
-        }
+//        if (StringUtils.hasText(title) && genre != null) {
+//            movies = movieService.findAllByGenreAndTitle(genre, title);
+//        } else if (StringUtils.hasText(title)) {
+//            movies = movieService.findAllByTitle(title);
+//        } else if (genre != null) {
+//            movies = movieService.findAllByGenre(genre);
+//        } else {
+//            movies = movieService.findAll();
+//        }
 
         /*
             Opción 1
@@ -70,22 +73,15 @@ public class MovieController {
     @PutMapping(value = "/{id}")
     public ResponseEntity<GetMovie> updateOneById(@PathVariable Long id,
                                                   @Valid @RequestBody SaveMovie saveDto) {
-        try {
-            GetMovie movieUpdated = movieService.updateOneById(id, saveDto);
+        GetMovie movieUpdated = movieService.updateOneById(id, saveDto);
 
-            return ResponseEntity.ok(movieUpdated);
-        } catch (ObjectNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok(movieUpdated);
     }
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> deleteOneById(@PathVariable Long id) {
-        try {
-            movieService.deleteOneById(id);
-            return ResponseEntity.noContent().build();
-        } catch (ObjectNotFoundException ex) {
-            return ResponseEntity.notFound().build();
-        }
+        movieService.deleteOneById(id);
+        return ResponseEntity.noContent().build();
     }
+
 }

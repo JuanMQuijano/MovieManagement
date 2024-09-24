@@ -10,7 +10,7 @@ public class PasswordValidator {
 
     public static void validatePassword(String password, String passwordRepeated) {
         if (!StringUtils.hasText(password) || !StringUtils.hasText(passwordRepeated)) {
-            throw new ResponseStatusException(400, "", new IllegalArgumentException("Password Must Contains Data"));
+            throw new IllegalArgumentException("Password Must Contains Data");
         }
 
         if (!password.equals(passwordRepeated)) {

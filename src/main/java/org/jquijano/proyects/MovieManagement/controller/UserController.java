@@ -5,7 +5,6 @@ import jakarta.validation.Valid;
 import org.jquijano.proyects.MovieManagement.dto.request.SaveUser;
 import org.jquijano.proyects.MovieManagement.dto.response.GetUser;
 import org.jquijano.proyects.MovieManagement.exception.ObjectNotFoundException;
-import org.jquijano.proyects.MovieManagement.persistence.entity.User;
 import org.jquijano.proyects.MovieManagement.persistence.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -54,20 +53,12 @@ public class UserController {
 
     @PutMapping(value = "/{username}")
     public ResponseEntity<GetUser> updateOneByUsername(@PathVariable String username, @Valid @RequestBody SaveUser saveDto) {
-        try {
-            return ResponseEntity.ok(userService.updateOneByUsername(username, saveDto));
-        } catch (ObjectNotFoundException ex) {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok(userService.updateOneByUsername(username, saveDto));
     }
 
     @DeleteMapping(value = "/{username}")
     public ResponseEntity<Void> deleteOneByUsername(@PathVariable String username) {
-        try {
-            userService.deleteOneByUsername(username);
-            return ResponseEntity.noContent().build();
-        } catch (ObjectNotFoundException ex) {
-            return ResponseEntity.notFound().build();
-        }
+        userService.deleteOneByUsername(username);
+        return ResponseEntity.noContent().build();
     }
 }
