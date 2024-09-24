@@ -10,6 +10,8 @@ import org.jquijano.proyects.MovieManagement.persistence.repository.MovieCrudRep
 import org.jquijano.proyects.MovieManagement.persistence.service.MovieService;
 import org.jquijano.proyects.MovieManagement.persistence.specification.FindAllMoviesSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,32 +26,12 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<GetMovie> findAll(MovieSearchCriteria movieSearchCriteria) {
+    public Page<GetMovie> findAll(MovieSearchCriteria movieSearchCriteria, Pageable pageable) {
         FindAllMoviesSpecification moviesSpecification = new FindAllMoviesSpecification(movieSearchCriteria);
-        List<Movie> entities = movieCrudRepository.findAll(moviesSpecification);
-        return MovieMapper.toGetDtoList(entities);
-    }
+        Page<Movie> entities = movieCrudRepository.findAll(moviesSpecification, pageable);
 
-//    @Override
-//    @Transactional(readOnly = true)
-//    public List<GetMovie> findAllByTitle(String title) {
-//        List<Movie> entities = movieCrudRepository.findByTitleContaining(title);
-//        return MovieMapper.toGetDtoList(entities);
-//    }
-//
-//    @Override
-//    @Transactional(readOnly = true)
-//    public List<GetMovie> findAllByGenre(MovieGenre genre) {
-//        List<Movie> entities = movieCrudRepository.findByGenre(genre);
-//        return MovieMapper.toGetDtoList(entities);
-//    }
-//
-//    @Override
-//    @Transactional(readOnly = true)
-//    public List<GetMovie> findAllByGenreAndTitle(MovieGenre genre, String title) {
-//        List<Movie> entities = movieCrudRepository.findByGenreAndTitleContaining(genre, title);
-//        return MovieMapper.toGetDtoList(entities);
-//    }
+        return entities.map(entity -> MovieMapper.toGetDto(entity));
+    }
 
     @Override
     @Transactional(readOnly = true)

@@ -3,18 +3,13 @@ package org.jquijano.proyects.MovieManagement.persistence.service;
 import org.jquijano.proyects.MovieManagement.dto.response.MovieSearchCriteria;
 import org.jquijano.proyects.MovieManagement.dto.request.SaveMovie;
 import org.jquijano.proyects.MovieManagement.dto.response.GetMovie;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-import java.util.List;
 
 public interface MovieService {
 
-    List<GetMovie> findAll(MovieSearchCriteria movieSearchCriteria);
-
-//    List<GetMovie> findAllByTitle(String title);
-//
-//    List<GetMovie> findAllByGenre(MovieGenre genre);
-//
-//    List<GetMovie> findAllByGenreAndTitle(MovieGenre genre, String title);
+    Page<GetMovie> findAll(MovieSearchCriteria movieSearchCriteria, Pageable pageable);
 
     GetMovie createOne(SaveMovie saveDto);
 
