@@ -2,6 +2,7 @@ package org.jquijano.proyects.MovieManagement.persistence.service.impl;
 
 import org.jquijano.proyects.MovieManagement.dto.request.SaveUser;
 import org.jquijano.proyects.MovieManagement.dto.response.GetUser;
+import org.jquijano.proyects.MovieManagement.dto.response.UserSearchCriteria;
 import org.jquijano.proyects.MovieManagement.exception.ObjectNotFoundException;
 import org.jquijano.proyects.MovieManagement.mapper.UserMapper;
 import org.jquijano.proyects.MovieManagement.persistence.entity.Movie;
@@ -10,8 +11,11 @@ import org.jquijano.proyects.MovieManagement.persistence.repository.MovieCrudRep
 import org.jquijano.proyects.MovieManagement.persistence.repository.UserCrudRepository;
 import org.jquijano.proyects.MovieManagement.persistence.service.UserService;
 import org.jquijano.proyects.MovieManagement.persistence.service.validator.PasswordValidator;
+import org.jquijano.proyects.MovieManagement.persistence.specification.FindAllUsersSpecification;
 import org.jquijano.proyects.MovieManagement.util.MovieGenre;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,15 +36,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<GetUser> findAll() {
-        return UserMapper.toGetDtoList(userCrudRepository.findAll());
+    public Page<GetUser> findAll(UserSearchCriteria userSearchCriteria, Pageable pageable) {
+        FindAllUsersSpecification findAllUsersSpecification = new FindAllUsersSpecification(userSearchCriteria);
+        Page<User> entities = userCrudRepository.findAll(findAllUsersSpecification, pageable);
+        return entities.map(UserMapper::toGetDto);
     }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<GetUser> findAllByName(String name) {
-        return UserMapper.toGetDtoList(userCrudRepository.findByNameContaining(name));
-    }
+//
+//    @Override
+//    @Transactional(readOnly = true)
+//    public List<GetUser> findAllByName(String name) {
+//        return UserMapper.toGetDtoList(userCrudRepository.findByNameContaining(name));
+//    }
 
     @Transactional(readOnly = true)
     private User findOneEntityByUsername(String username) {

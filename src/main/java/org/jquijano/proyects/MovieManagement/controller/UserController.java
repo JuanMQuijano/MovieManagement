@@ -4,9 +4,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.jquijano.proyects.MovieManagement.dto.request.SaveUser;
 import org.jquijano.proyects.MovieManagement.dto.response.GetUser;
+import org.jquijano.proyects.MovieManagement.dto.response.UserSearchCriteria;
 import org.jquijano.proyects.MovieManagement.exception.ObjectNotFoundException;
+import org.jquijano.proyects.MovieManagement.persistence.entity.User;
 import org.jquijano.proyects.MovieManagement.persistence.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -22,15 +26,11 @@ public class UserController {
     private UserService userService;
 
     @GetMapping
-    public ResponseEntity<List<GetUser>> findAll(@RequestParam(required = false) String name) {
-
-        List<GetUser> users = null;
-
-        if (StringUtils.hasText(name)) {
-            users = userService.findAllByName(name);
-        } else {
-            users = userService.findAll();
-        }
+    public ResponseEntity<Page<GetUser>> findAll(@RequestParam(required = false) String name,
+                                                 @RequestParam(required = false) String username,
+                                                 Pageable pageable) {
+        UserSearchCriteria userSearchCriteria = new UserSearchCriteria(name, username);
+        Page<GetUser> users = userService.findAll(userSearchCriteria, pageable);
 
         return ResponseEntity.ok(users);
     }
