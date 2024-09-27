@@ -41,15 +41,10 @@ public class UserServiceImpl implements UserService {
         Page<User> entities = userCrudRepository.findAll(findAllUsersSpecification, pageable);
         return entities.map(UserMapper::toGetDto);
     }
-//
-//    @Override
-//    @Transactional(readOnly = true)
-//    public List<GetUser> findAllByName(String name) {
-//        return UserMapper.toGetDtoList(userCrudRepository.findByNameContaining(name));
-//    }
 
     @Transactional(readOnly = true)
-    private User findOneEntityByUsername(String username) {
+    @Override
+    public User findOneEntityByUsername(String username) {
         return userCrudRepository.findByUsername(username)
                 .orElseThrow(() -> new ObjectNotFoundException("[user: " + username + "]"));
     }

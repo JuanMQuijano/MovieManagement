@@ -15,6 +15,12 @@ public interface UserService {
 
 //    List<GetUser> findAllByName(String name);
 
+    /**
+     *
+     * @param username
+     * @throws
+     * @return
+     */
     GetUser findOneByUsername(String username);
 
     GetUser createOne(SaveUser saveUser);
@@ -23,4 +29,10 @@ public interface UserService {
 
     void deleteOneByUsername(String username);
 
+    /**
+     * @param username
+     * @return
+     * @throws {@link org.jquijano.proyects.MovieManagement.exception.ObjectNotFoundException} if the given username doesn't exist
+     */
+    User findOneEntityByUsername(String username);
 }

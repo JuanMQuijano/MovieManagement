@@ -46,9 +46,11 @@ public class GlobalExceptionHandler {
             return this.handleHttpRequestMethodNotSupportedException(httpRequestMethodNotSupportedException, request, response, timestamps);
         } else if (exception instanceof HttpMediaTypeNotSupportedException httpMediaTypeNotSupportedException) {
             return this.handleHttpMediaTypeNotSupportedException(httpMediaTypeNotSupportedException, request, response, timestamps);
-        } else if(exception instanceof HttpMessageNotReadableException httpMessageNotReadableException){
+        } else if (exception instanceof HttpMessageNotReadableException httpMessageNotReadableException) {
             return this.handleHttpMessageNotReadableException(httpMessageNotReadableException, request, response, timestamps);
-        }else {
+        } else if (exception instanceof RatingDuplicatedException ratingDuplicatedException) {
+            return this.handleRatingDuplicatedException(ratingDuplicatedException, request, response, timestamps);
+        } else {
             return this.handleException(exception, request, response, timestamps);
         }
     }
@@ -201,4 +203,20 @@ public class GlobalExceptionHandler {
 
     }
 
+    private ResponseEntity<ApiError> handleRatingDuplicatedException(RatingDuplicatedException ratingDuplicatedException, HttpServletRequest request, HttpServletResponse response, LocalDateTime timestamps) {
+        int status = HttpStatus.CONFLICT.value();
+
+        ApiError apiError = new ApiError(
+                status,
+                request.getRequestURL().toString(),
+                request.getMethod(),
+                ratingDuplicatedException.getMessage(),
+                ratingDuplicatedException.getMessage(),
+                timestamps,
+                null
+        );
+
+        return ResponseEntity.status(status).body(apiError);
+
+    }
 }
