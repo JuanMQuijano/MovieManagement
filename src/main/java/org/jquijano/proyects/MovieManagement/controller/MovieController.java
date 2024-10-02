@@ -2,10 +2,12 @@ package org.jquijano.proyects.MovieManagement.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import org.jquijano.proyects.MovieManagement.dto.response.GetMovieStatistic;
 import org.jquijano.proyects.MovieManagement.dto.response.MovieSearchCriteria;
 import org.jquijano.proyects.MovieManagement.dto.request.SaveMovie;
 import org.jquijano.proyects.MovieManagement.dto.response.GetMovie;
 import org.jquijano.proyects.MovieManagement.persistence.service.MovieService;
+import org.jquijano.proyects.MovieManagement.persistence.service.RatingService;
 import org.jquijano.proyects.MovieManagement.util.MovieGenre;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -25,6 +27,9 @@ public class MovieController {
     @Autowired
     private MovieService movieService;
 
+    @Autowired
+    private RatingService ratingService;
+
     @GetMapping
     public ResponseEntity<Page<GetMovie>> findAll(@RequestParam(required = false) String title,
                                                   @RequestParam(required = false) MovieGenre genre,
@@ -40,8 +45,13 @@ public class MovieController {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<GetMovie> findOneById(@PathVariable Long id) {
+    public ResponseEntity<GetMovieStatistic> findOneById(@PathVariable Long id) {
         return ResponseEntity.ok(movieService.findOneById(id));
+    }
+
+    @GetMapping(value = "/{id}/ratings")
+    public ResponseEntity<Page<GetMovie.GetRating>> findAllRatingsForMovieId(@PathVariable Long id, Pageable pageable) {
+        return ResponseEntity.ok(ratingService.findAllByMovieId(id, pageable));
     }
 
     @PostMapping

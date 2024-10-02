@@ -2,6 +2,7 @@ package org.jquijano.proyects.MovieManagement.persistence.service;
 
 import org.jquijano.proyects.MovieManagement.dto.request.SaveUser;
 import org.jquijano.proyects.MovieManagement.dto.response.GetUser;
+import org.jquijano.proyects.MovieManagement.dto.response.GetUserStatistic;
 import org.jquijano.proyects.MovieManagement.dto.response.UserSearchCriteria;
 import org.jquijano.proyects.MovieManagement.persistence.entity.User;
 import org.springframework.data.domain.Page;
@@ -21,7 +22,7 @@ public interface UserService {
      * @throws
      * @return
      */
-    GetUser findOneByUsername(String username);
+    GetUserStatistic findOneByUsername(String username);
 
     GetUser createOne(SaveUser saveUser);
 

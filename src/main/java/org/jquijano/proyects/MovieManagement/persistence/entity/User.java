@@ -23,7 +23,7 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user", cascade = {CascadeType.REMOVE})
     private List<Rating> ratings;
 
     @CreationTimestamp

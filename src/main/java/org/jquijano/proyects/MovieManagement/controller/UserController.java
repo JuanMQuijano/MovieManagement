@@ -4,9 +4,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.jquijano.proyects.MovieManagement.dto.request.SaveUser;
 import org.jquijano.proyects.MovieManagement.dto.response.GetUser;
+import org.jquijano.proyects.MovieManagement.dto.response.GetUserStatistic;
 import org.jquijano.proyects.MovieManagement.dto.response.UserSearchCriteria;
 import org.jquijano.proyects.MovieManagement.exception.ObjectNotFoundException;
 import org.jquijano.proyects.MovieManagement.persistence.entity.User;
+import org.jquijano.proyects.MovieManagement.persistence.service.RatingService;
 import org.jquijano.proyects.MovieManagement.persistence.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -25,6 +27,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private RatingService ratingService;
+
     @GetMapping
     public ResponseEntity<Page<GetUser>> findAll(@RequestParam(required = false) String name,
                                                  @RequestParam(required = false) String username,
@@ -36,8 +41,13 @@ public class UserController {
     }
 
     @GetMapping(value = "/{username}")
-    public ResponseEntity<GetUser> findOneByUsername(@PathVariable String username) {
+    public ResponseEntity<GetUserStatistic> findOneByUsername(@PathVariable String username) {
         return ResponseEntity.ok(userService.findOneByUsername(username));
+    }
+
+    @GetMapping(value = "/{username}/ratings")
+    public ResponseEntity<Page<GetUser.GetRating>> findOneByUsername(@PathVariable String username, Pageable pageable) {
+        return ResponseEntity.ok(ratingService.findAllByUsername(username, pageable));
     }
 
     @PostMapping

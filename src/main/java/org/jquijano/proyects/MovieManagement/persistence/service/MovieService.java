@@ -1,5 +1,6 @@
 package org.jquijano.proyects.MovieManagement.persistence.service;
 
+import org.jquijano.proyects.MovieManagement.dto.response.GetMovieStatistic;
 import org.jquijano.proyects.MovieManagement.dto.response.MovieSearchCriteria;
 import org.jquijano.proyects.MovieManagement.dto.request.SaveMovie;
 import org.jquijano.proyects.MovieManagement.dto.response.GetMovie;
@@ -17,5 +18,5 @@ public interface MovieService {
 
     void deleteOneById(Long id);
 
-    GetMovie findOneById(Long id);
+    GetMovieStatistic findOneById(Long id);
 }

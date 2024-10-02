@@ -2,6 +2,7 @@ package org.jquijano.proyects.MovieManagement.mapper;
 
 import org.jquijano.proyects.MovieManagement.dto.request.SaveUser;
 import org.jquijano.proyects.MovieManagement.dto.response.GetUser;
+import org.jquijano.proyects.MovieManagement.dto.response.GetUserStatistic;
 import org.jquijano.proyects.MovieManagement.persistence.entity.User;
 
 import java.util.List;
@@ -11,7 +12,7 @@ public class UserMapper {
     public static GetUser toGetDto(User entity) {
         if (entity == null) return null;
 
-        return new GetUser(entity.getUsername(), entity.getName(), RatingMapper.toGetUserRatingDtoList(entity.getRatings()));
+        return new GetUser(entity.getUsername(), entity.getName(), entity.getRatings().size());
     }
 
     public static List<GetUser> toGetDtoList(List<User> entities) {
@@ -37,5 +38,11 @@ public class UserMapper {
         oldUser.setName(saveDto.name());
         oldUser.setPassword(saveDto.password());
 
+    }
+
+    public static GetUserStatistic toGetUserStatisticDto(User entity, Double avg, int low, int high) {
+        if (entity == null) return null;
+
+        return new GetUserStatistic(entity.getUsername(), entity.getCreatedAt(), entity.getRatings().size(), avg, low, high);
     }
 }

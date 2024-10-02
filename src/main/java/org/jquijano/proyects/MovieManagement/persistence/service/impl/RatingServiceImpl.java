@@ -3,6 +3,8 @@ package org.jquijano.proyects.MovieManagement.persistence.service.impl;
 import jakarta.persistence.EntityManager;
 import org.jquijano.proyects.MovieManagement.dto.request.SaveRating;
 import org.jquijano.proyects.MovieManagement.dto.response.GetCompleteRating;
+import org.jquijano.proyects.MovieManagement.dto.response.GetMovie;
+import org.jquijano.proyects.MovieManagement.dto.response.GetUser;
 import org.jquijano.proyects.MovieManagement.exception.ObjectNotFoundException;
 import org.jquijano.proyects.MovieManagement.exception.RatingDuplicatedException;
 import org.jquijano.proyects.MovieManagement.mapper.RatingMapper;
@@ -38,14 +40,14 @@ public class RatingServiceImpl implements RatingService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<GetCompleteRating> findAllByMovieId(Long id, Pageable pageable) {
-        return ratingCrudRepository.findByMovieId(id, pageable).map(RatingMapper::toGetCompleteRatingDto);
+    public Page<GetMovie.GetRating> findAllByMovieId(Long id, Pageable pageable) {
+        return ratingCrudRepository.findByMovieId(id, pageable).map(RatingMapper::toGetMovieRatingDto);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Page<GetCompleteRating> findAllByUsername(String username, Pageable pageable) {
-        return ratingCrudRepository.findByUsername(username, pageable).map(RatingMapper::toGetCompleteRatingDto);
+    public Page<GetUser.GetRating> findAllByUsername(String username, Pageable pageable) {
+        return ratingCrudRepository.findByUsername(username, pageable).map(RatingMapper::toGetUserRatingDto);
     }
 
     @Override
@@ -59,7 +61,7 @@ public class RatingServiceImpl implements RatingService {
 
         boolean ratingExists = ratingCrudRepository.existsByMovieIdAndUserUsername(rating.movieId(), rating.username());
 
-        if(ratingExists) throw new RatingDuplicatedException(rating.username(), rating.movieId());
+        if (ratingExists) throw new RatingDuplicatedException(rating.username(), rating.movieId());
 //        Long ratingId = ratingCrudRepository.getRatingIdByMovieIdAndUserUsername(rating.movieId(), rating.username());
 //        if (ratingId != null && ratingId.longValue() > 0) {
 //            return this.updateOneById(ratingId, rating);

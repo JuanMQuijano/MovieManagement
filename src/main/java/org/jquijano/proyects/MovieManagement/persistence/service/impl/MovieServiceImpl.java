@@ -1,5 +1,6 @@
 package org.jquijano.proyects.MovieManagement.persistence.service.impl;
 
+import org.jquijano.proyects.MovieManagement.dto.response.GetMovieStatistic;
 import org.jquijano.proyects.MovieManagement.dto.response.MovieSearchCriteria;
 import org.jquijano.proyects.MovieManagement.dto.request.SaveMovie;
 import org.jquijano.proyects.MovieManagement.dto.response.GetMovie;
@@ -7,6 +8,7 @@ import org.jquijano.proyects.MovieManagement.exception.ObjectNotFoundException;
 import org.jquijano.proyects.MovieManagement.mapper.MovieMapper;
 import org.jquijano.proyects.MovieManagement.persistence.entity.Movie;
 import org.jquijano.proyects.MovieManagement.persistence.repository.MovieCrudRepository;
+import org.jquijano.proyects.MovieManagement.persistence.repository.RatingCrudRepository;
 import org.jquijano.proyects.MovieManagement.persistence.service.MovieService;
 import org.jquijano.proyects.MovieManagement.persistence.specification.FindAllMoviesSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,14 +17,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 @Service
 @Transactional
 public class MovieServiceImpl implements MovieService {
 
     @Autowired
     private MovieCrudRepository movieCrudRepository;
+
+    @Autowired
+    private RatingCrudRepository ratingCrudRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -35,9 +38,15 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     @Transactional(readOnly = true)
-    public GetMovie findOneById(Long id) {
-        return MovieMapper.toGetDto(
-                this.findOneEntityById(id)
+    public GetMovieStatistic findOneById(Long id) {
+        double avg = ratingCrudRepository.getAvgRatingByMovieId(id);
+        int lowest = ratingCrudRepository.getMinRatingByMovieId(id);
+        int max = ratingCrudRepository.getMaxRatingByMovieId(id);
+        System.out.println(avg);
+        System.out.println(lowest);
+        System.out.println(max);
+        return MovieMapper.toGetMovieStatisticDto(
+                this.findOneEntityById(id), avg, lowest, max
         );
     }
 

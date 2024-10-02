@@ -27,7 +27,7 @@ public class Movie {
 
     private int releaseYear;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "movie")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "movie", cascade = {CascadeType.REMOVE})
     private List<Rating> ratings;
 
     @CreationTimestamp

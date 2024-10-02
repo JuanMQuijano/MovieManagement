@@ -2,12 +2,14 @@ package org.jquijano.proyects.MovieManagement.persistence.service.impl;
 
 import org.jquijano.proyects.MovieManagement.dto.request.SaveUser;
 import org.jquijano.proyects.MovieManagement.dto.response.GetUser;
+import org.jquijano.proyects.MovieManagement.dto.response.GetUserStatistic;
 import org.jquijano.proyects.MovieManagement.dto.response.UserSearchCriteria;
 import org.jquijano.proyects.MovieManagement.exception.ObjectNotFoundException;
 import org.jquijano.proyects.MovieManagement.mapper.UserMapper;
 import org.jquijano.proyects.MovieManagement.persistence.entity.Movie;
 import org.jquijano.proyects.MovieManagement.persistence.entity.User;
 import org.jquijano.proyects.MovieManagement.persistence.repository.MovieCrudRepository;
+import org.jquijano.proyects.MovieManagement.persistence.repository.RatingCrudRepository;
 import org.jquijano.proyects.MovieManagement.persistence.repository.UserCrudRepository;
 import org.jquijano.proyects.MovieManagement.persistence.service.UserService;
 import org.jquijano.proyects.MovieManagement.persistence.service.validator.PasswordValidator;
@@ -34,6 +36,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserCrudRepository userCrudRepository;
 
+    @Autowired
+    private RatingCrudRepository ratingCrudRepository;
+
     @Override
     @Transactional(readOnly = true)
     public Page<GetUser> findAll(UserSearchCriteria userSearchCriteria, Pageable pageable) {
@@ -51,8 +56,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public GetUser findOneByUsername(String username) {
-        return UserMapper.toGetDto(this.findOneEntityByUsername(username));
+    public GetUserStatistic findOneByUsername(String username) {
+        User user = this.findOneEntityByUsername(username);
+        Double avg = ratingCrudRepository.getAvgRatingByUserId(user.getId());
+        int min = ratingCrudRepository.getMinRatingByUserId(user.getId());
+        int max = ratingCrudRepository.getMaxRatingByUserId(user.getId());
+        return UserMapper.toGetUserStatisticDto(this.findOneEntityByUsername(username), avg, min, max);
     }
 
     @Override

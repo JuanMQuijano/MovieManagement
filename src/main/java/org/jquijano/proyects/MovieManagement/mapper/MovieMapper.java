@@ -2,6 +2,7 @@ package org.jquijano.proyects.MovieManagement.mapper;
 
 import org.jquijano.proyects.MovieManagement.dto.request.SaveMovie;
 import org.jquijano.proyects.MovieManagement.dto.response.GetMovie;
+import org.jquijano.proyects.MovieManagement.dto.response.GetMovieStatistic;
 import org.jquijano.proyects.MovieManagement.persistence.entity.Movie;
 
 import java.util.List;
@@ -17,7 +18,7 @@ public class MovieMapper {
                 entity.getDirector(),
                 entity.getGenre(),
                 entity.getReleaseYear(),
-                RatingMapper.toGetMovieRatingDtoList(entity.getRatings())
+                entity.getRatings() != null ? entity.getRatings().size() : 0
         );
     }
 
@@ -28,7 +29,7 @@ public class MovieMapper {
                 .map(MovieMapper::toGetDto).toList();
     }
 
-    public static Movie toEntity(SaveMovie saveDto){
+    public static Movie toEntity(SaveMovie saveDto) {
         if (saveDto == null) return null;
 
         Movie newMovie = new Movie();
@@ -41,11 +42,26 @@ public class MovieMapper {
     }
 
     public static void updateEntity(Movie oldMovie, SaveMovie saveDto) {
-        if(oldMovie == null || saveDto == null) return;
+        if (oldMovie == null || saveDto == null) return;
 
         oldMovie.setGenre(saveDto.genre());
         oldMovie.setReleaseYear(saveDto.releaseYear());
         oldMovie.setTitle(saveDto.title());
         oldMovie.setDirector(saveDto.director());
+    }
+
+    public static GetMovieStatistic toGetMovieStatisticDto(Movie entity, Double avgRating, int lowestRating, int highestRating) {
+        if (entity == null) return null;
+
+        return new GetMovieStatistic(entity.getId(),
+                entity.getTitle(),
+                entity.getDirector(),
+                entity.getGenre(),
+                entity.getRatings().size(),
+                entity.getReleaseYear(),
+                avgRating,
+                lowestRating,
+                highestRating
+        );
     }
 }
